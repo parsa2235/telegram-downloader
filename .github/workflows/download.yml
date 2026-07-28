@@ -9,6 +9,9 @@ on:
   repository_dispatch:
     types: [download_telegram]
 
+permissions:
+  contents: write
+
 jobs:
   download_and_release:
     runs-on: ubuntu-latest
