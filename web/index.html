@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <h1 id="site-title">مدیریت دانلود</h1>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="lang-toggle" id="langToggle" aria-label="Toggle Language">
+                        <span class="lang-current">FA</span>
+                        <span class="lang-arrow">↔</span>
+                        <span class="lang-other">EN</span>
+                    </button>
+                    
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+                        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalFiles">0</div>
+                        <div class="stat-label" data-fa="کل فایل‌ها" data-en="Total Files">کل فایل‌ها</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSize">0 MB</div>
+                        <div class="stat-label" data-fa="حجم کل" data-en="Total Size">حجم کل</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="lastUpdate">-</div>
+                        <div class="stat-label" data-fa="آخرین بروزرسانی" data-en="Last Update">آخرین بروزرسانی</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="controls-section">
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" id="searchInput" data-placeholder-fa="جستجو در نام فایل‌ها..." data-placeholder-en="Search files..." placeholder="جستجو در نام فایل‌ها...">
+                </div>
+                
+                <div class="filters">
+                    <select id="channelFilter" class="filter-select">
+                        <option value="all" data-fa="همه کانال‌ها" data-en="All Channels">همه کانال‌ها</option>
+                    </select>
+                    
+                    <select id="extFilter" class="filter-select">
+                        <option value="all" data-fa="همه فرمت‌ها" data-en="All Formats">همه فرمت‌ها</option>
+                    </select>
+                    
+                    <select id="sortFilter" class="filter-select">
+                        <option value="newest" data-fa="جدیدترین" data-en="Newest">جدیدترین</option>
+                        <option value="oldest" data-fa="قدیمی‌ترین" data-en="Oldest">قدیمی‌ترین</option>
+                        <option value="largest" data-fa="بزرگترین" data-en="Largest">بزرگترین</option>
+                        <option value="smallest" data-fa="کوچکترین" data-en="Smallest">کوچکترین</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="files-section">
+                <div class="files-grid" id="filesGrid">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p data-fa="در حال بارگذاری..." data-en="Loading...">در حال بارگذاری...</p>
+                    </div>
+                </div>
+                
+                <div class="empty-state hidden" id="emptyState">
+                    <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M20 13V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7"/>
+                        <line x1="12" y1="13" x2="12" y2="21"/>
+                        <path d="M8 21h8"/>
+                        <path d="M12 17v4"/>
+                    </svg>
+                    <p data-fa="هیچ فایلی یافت نشد" data-en="No files found">هیچ فایلی یافت نشد</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Download Manager. <span data-fa="طراحی شده با دقت" data-en="Crafted with precision">طراحی شده با دقت</span></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
