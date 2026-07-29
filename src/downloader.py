@@ -11,9 +11,10 @@ import requests
 from aiohttp import ClientSession
 
 # Configuration from Environment
-API_ID = int(os.environ["TELEGRAM_API_ID"])
-API_HASH = os.environ["TELEGRAM_API_HASH"]
-SESSION_STRING = os.environ["TELEGRAM_SESSION"]
+# Matching the names passed in the GitHub Actions workflow
+API_ID = int(os.environ["API_ID"])
+API_HASH = os.environ["API_HASH"]
+SESSION_STRING = os.environ["SESSION_STRING"]
 REPO_NAME = os.environ["REPO_NAME"]
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 INPUT_LINKS = os.environ["INPUT_LINKS"]
