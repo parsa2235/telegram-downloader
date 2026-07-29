@@ -29,9 +29,9 @@ def parse_input_links(input_text: str, chat_id: str) -> List[Tuple[str, int]]:
     """
     Parse input to extract message IDs.
     Supports:
-    - Single links: t.me/channel/123
-    - Ranges: 100-120
-    - Line by line IDs
+    - Single links: t.me/channel/123 or t.me/c/.../123
+    - Ranges: 100-120 (uses provided chat_id)
+    - Line by line IDs (uses provided chat_id)
     """
     tasks = []
     lines = input_text.strip().split('\n')
@@ -41,25 +41,39 @@ def parse_input_links(input_text: str, chat_id: str) -> List[Tuple[str, int]]:
         if not line:
             continue
             
-        # Check for range format (e.g., 100-120)
+        # Check for range format (e.g., 100-120) - requires chat_id
         range_match = re.match(r'^(\d+)-(\d+)$', line)
         if range_match:
+            if not chat_id:
+                print(f"⚠️ Range '{line}' ignored: Chat ID required for ranges")
+                continue
             start, end = int(range_match.group(1)), int(range_match.group(2))
             for msg_id in range(start, end + 1):
                 tasks.append((chat_id, msg_id))
             continue
         
-        # Check for full link format
-        link_match = re.search(r't\.me/(?:c/)?(\d+)/(\d+)', line)
-        if link_match:
-            cid = link_match.group(1)
-            if cid == 'c':
-                cid = f"-100{link_match.group(1)}"
-            tasks.append((cid, int(link_match.group(2))))
+        # Check for full link format (self-contained with chat_id)
+        # Pattern 1: t.me/channelname/123 (public)
+        # Pattern 2: t.me/c/123456789/123 (private)
+        private_match = re.search(r't\.me/c/(\d+)/(\d+)', line)
+        if private_match:
+            cid = f"-100{private_match.group(1)}"
+            msg_id = int(private_match.group(2))
+            tasks.append((cid, msg_id))
+            continue
+            
+        public_match = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', line)
+        if public_match:
+            cid = public_match.group(1)
+            msg_id = int(public_match.group(2))
+            tasks.append((cid, msg_id))
             continue
         
-        # Assume it's just a message ID
+        # Assume it's just a message ID (requires chat_id)
         if line.isdigit():
+            if not chat_id:
+                print(f"⚠️ Message ID '{line}' ignored: Chat ID required")
+                continue
             tasks.append((chat_id, int(line)))
     
     return tasks
