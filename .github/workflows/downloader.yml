@@ -4,27 +4,29 @@ on:
   workflow_dispatch:
     inputs:
       links:
-        description: 'Telegram Post Links (one per line or range e.g., 100-120)'
+        description: 'Telegram Post Links (one per line) OR Range (e.g., 100-120)'
         required: true
         type: string
       chat_id:
-        description: 'Chat ID or Username (e.g., channel_name or -100123456789)'
-        required: true
+        description: 'Chat ID or Username (Optional if links contain channel name)'
+        required: false
         type: string
+        default: ''
 
 jobs:
   download-and-upload:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    concurrency: 
-      group: telegram-download-queue
-      cancel-in-progress: false
+    strategy:
+      fail-fast: false
+      max-parallel: 2 # Download 2 files simultaneously
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.BOT_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }} # Use GitHub PAT for authentication
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -55,5 +57,7 @@ jobs:
       - name: Commit and Push History
         run: |
           git add data/history.json
-          git commit -m "Update history: Batch download completed" || echo "No changes to commit"
+          git commit -m "Update history: Batch download completed [skip ci]" || echo "No changes to commit"
           git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
