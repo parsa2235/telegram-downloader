@@ -11,14 +11,14 @@ import requests
 from aiohttp import ClientSession
 
 # Configuration from Environment
-# Matching the names passed in the GitHub Actions workflow
-API_ID = int(os.environ["API_ID"])
-API_HASH = os.environ["API_HASH"]
-SESSION_STRING = os.environ["SESSION_STRING"]
+# Using the exact secret names defined in GitHub Settings
+API_ID = int(os.environ["TELEGRAM_API_ID"])
+API_HASH = os.environ["TELEGRAM_API_HASH"]
+SESSION_STRING = os.environ["TELEGRAM_SESSION"]
 REPO_NAME = os.environ["REPO_NAME"]
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
-INPUT_LINKS = os.environ["INPUT_LINKS"]
-INPUT_CHAT_ID = os.environ["INPUT_CHAT_ID"]
+INPUT_LINKS = os.environ.get("INPUT_LINKS", "")
+INPUT_CHAT_ID = os.environ.get("INPUT_CHAT_ID", "")
 
 # Constants
 MAX_CONCURRENT_DOWNLOADS = 2  # Parallel downloads
